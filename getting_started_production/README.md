@@ -32,7 +32,7 @@ terraform output docs_url
 
 - HTTPS with automatic SSL certificate (auto-generated domain)
 - WAF protection with rate limiting and anonymous IP blocking
-- CloudWatch alarms and monitoring
+- Optional CloudWatch alarms and monitoring
 - Auto-scaling and API key authentication
 - Interactive API documentation at `/docs`
 - IP-restricted access (your IP only)
@@ -56,6 +56,16 @@ curl -X POST "$(terraform output -raw api_endpoint)/v1/chat/completions" \
 Or visit the interactive documentation:
 ```bash
 open "$(terraform output -raw docs_url)"
+```
+
+## Architecture Overview
+
+```mermaid
+flowchart LR
+  Browser["🌐 Browser"] --> ALB["⚖️ ALB<br/>(HTTPS + WAF)"] --> Stdapi["🤖 stdapi.ai<br/>(ECS Fargate)"]
+  Stdapi --> Bedrock["🤖 Amazon Bedrock"]
+  Stdapi --> S3["🪣 S3 Bucket"]
+  Stdapi --> AIServices["🎙️ AWS AI Services<br/>(Polly, Transcribe, ...)"]
 ```
 
 ## Security

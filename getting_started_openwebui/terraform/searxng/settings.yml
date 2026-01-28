@@ -1,0 +1,13 @@
+---
+use_default_settings: true
+server:
+  limiter: false
+  use_x_forwarded_for: false
+search:
+  formats:
+    - json
+engines:
+  - name: torch
+    disabled: true
+  - name: ahmia
+    disabled: true

@@ -35,7 +35,7 @@ terraform output docs_url
 - Regional S3 buckets for multimodal operations
 - HTTPS with automatic SSL certificate (auto-generated domain)
 - WAF protection with rate limiting and anonymous IP blocking
-- CloudWatch alarms and monitoring
+- Optional CloudWatch alarms and monitoring
 - Auto-scaling and API key authentication
 - Interactive API documentation at `/docs`
 - IP-restricted access (your IP only)
@@ -59,6 +59,20 @@ curl -X POST "$(terraform output -raw api_endpoint)/v1/chat/completions" \
 Or visit the interactive documentation:
 ```bash
 open "$(terraform output -raw docs_url)"
+```
+
+## Architecture Overview
+
+```mermaid
+flowchart LR
+  Browser["🌐 Browser"] --> ALB["⚖️ ALB<br/>(HTTPS + WAF)"] --> Stdapi["🤖 stdapi.ai<br/>(ECS Fargate)"]
+  Stdapi --> BedrockVirginia["🤖 Bedrock<br/>us-east-1 N. Virginia"]
+  Stdapi --> BedrockOregon["🤖 Bedrock<br/>us-west-2 Oregon"]
+  Stdapi --> BedrockOhio["🤖 Bedrock<br/>us-east-2 Ohio"]
+  Stdapi --> S3Virginia["🪣 S3 N. Virginia"]
+  Stdapi --> S3Oregon["🪣 S3 Oregon"]
+  Stdapi --> S3Ohio["🪣 S3 Ohio"]
+  Stdapi --> AIServices["🎙️ AWS AI Services<br/>(Polly, Transcribe, ...)"]
 ```
 
 ## When to Use This Example

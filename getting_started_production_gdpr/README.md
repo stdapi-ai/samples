@@ -36,7 +36,7 @@ terraform output docs_url
 - GDPR-compliant: EU data residency, no global cross-region inference
 - HTTPS with automatic SSL certificate (auto-generated domain)
 - WAF protection with rate limiting and anonymous IP blocking
-- CloudWatch alarms and monitoring
+- Optional CloudWatch alarms and monitoring
 - Auto-scaling and API key authentication
 - Interactive API documentation at `/docs`
 - IP-restricted access (your IP only)
@@ -60,6 +60,22 @@ curl -X POST "$(terraform output -raw api_endpoint)/v1/chat/completions" \
 Or visit the interactive documentation:
 ```bash
 open "$(terraform output -raw docs_url)"
+```
+
+## Architecture Overview
+
+```mermaid
+flowchart LR
+  Browser["🌐 Browser"] --> ALB["⚖️ ALB<br/>(HTTPS + WAF)"] --> Stdapi["🤖 stdapi.ai<br/>(ECS Fargate)"]
+  Stdapi --> BedrockParis["🤖 Bedrock<br/>eu-west-3 Paris"]
+  Stdapi --> BedrockIreland["🤖 Bedrock<br/>eu-west-1 Ireland"]
+  Stdapi --> BedrockFrankfurt["🤖 Bedrock<br/>eu-central-1 Frankfurt"]
+  Stdapi --> BedrockStockholm["🤖 Bedrock<br/>eu-north-1 Stockholm"]
+  Stdapi --> S3Paris["🪣 S3 Paris"]
+  Stdapi --> S3Ireland["🪣 S3 Ireland"]
+  Stdapi --> S3Frankfurt["🪣 S3 Frankfurt"]
+  Stdapi --> S3Stockholm["🪣 S3 Stockholm"]
+  Stdapi --> AIServices["🎙️ AWS AI Services<br/>(Polly, Transcribe, ...)"]
 ```
 
 ## When to Use This Example
