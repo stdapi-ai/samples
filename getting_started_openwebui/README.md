@@ -78,6 +78,11 @@ Access is restricted to your current IP address:
 
 ## Customization
 
+### Region Configuration
+
+To configure your AWS regions and compliance/sovereignty, edit `terraform/main.tf` and 
+adjust it to your EU or US configuration.
+
 ### Open WebUI features
 
 To enable optional features, edit `terraform/openwebui.tf` and adjust the corresponding

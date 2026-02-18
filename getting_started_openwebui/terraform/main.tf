@@ -65,14 +65,35 @@ module "stdapi_ai" {
   AWS Bedrock Multi-Region Configuration
   --------------------------------------------------------------------------
   Models will be accessed from these regions in order of preference
+
+  Select between EU and US configuration.
   */
   aws_bedrock_regions = distinct([
     data.aws_region.current.name, # Current region (primary)
     # Common US regions to access almost all models
     "us-east-1", # N. Virginia
     "us-west-2", # Oregon
-    "us-east-2"  # Ohio
+    "us-east-2",  # Ohio
+
+    # EU regions
+    # "eu-west-3",    # Paris (primary)
+    # "eu-west-1",    # Ireland
+    # "eu-central-1", # Frankfurt
+    # "eu-north-1",    # Stockholm
   ])
+
+  /*
+  --------------------------------------------------------------------------
+  Sovereignty/Compliance configuration (GDPR, HIPAA, ...)
+  --------------------------------------------------------------------------
+  Disable global cross-region inference to keep all data within your global
+  region (EU or US, based on your aws_bedrock_regions selected regions)
+  This ensures AWS Bedrock only routes requests within specified regions
+
+  Set to "false" if you need compliance/Sovereignty,
+  and "true" if you prefer higher availability
+  */
+  aws_bedrock_cross_region_inference_global = true
 
   /*
   --------------------------------------------------------------------------

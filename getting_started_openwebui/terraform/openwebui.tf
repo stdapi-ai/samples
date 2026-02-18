@@ -112,13 +112,13 @@ module "openwebui" {
         ENABLE_IMAGE_GENERATION    = "true"
         IMAGE_GENERATION_ENGINE    = "openai"
         IMAGES_OPENAI_API_BASE_URL = local.stdapi_openai_api_url
-        IMAGE_GENERATION_MODEL     = "stability.stable-image-core-v1:1"
+        IMAGE_GENERATION_MODEL     = "amazon.nova-canvas-v1:0"
 
         /* Image editing */
         ENABLE_IMAGE_EDIT               = "true"
         IMAGE_EDIT_ENGINE               = "openai"
         IMAGES_EDIT_OPENAI_API_BASE_URL = local.stdapi_openai_api_url
-        IMAGE_EDIT_MODEL                = "stability.stable-image-control-structure-v1:0"
+        IMAGE_EDIT_MODEL                = "amazon.nova-canvas-v1:0"
 
         /* Speech to Text */
         AUDIO_STT_ENGINE              = "openai"
