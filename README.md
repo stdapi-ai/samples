@@ -4,7 +4,7 @@
 
 ## 🎯 What is stdapi.ai?
 
-**stdapi.ai** is an OpenAI-compatible API gateway for AWS Bedrock and AI services. Deploy any OpenAI application on AWS with no code changes—works with LangChain, Continue.dev, Open WebUI, n8n, and 1000+ tools.
+**stdapi.ai** is an OpenAI & Anthropic compatible API gateway for AWS Bedrock and AI services. Works out of the box with any app or tool that supports the OpenAI or Anthropic APIs—LangChain, Continue.dev, Open WebUI, n8n, and 1000+ tools.
 
 - 🧠 **80+ Models** - Claude 4.6+, Nova 2, Llama 4, DeepSeek v3.2, Stable Diffusion, and more
 - 🔒 **Enterprise Compliance** - Data sovereignty, GDPR/HIPAA/FedRAMP ready, AWS region controls
@@ -141,7 +141,7 @@ All examples include:
 ### Official Documentation
 - **[Getting Started Guide](https://stdapi.ai/operations_getting_started/)** - Complete deployment tutorials and best practices
 - **[Configuration Reference](https://stdapi.ai/operations_configuration/)** - All environment variables and settings explained
-- **[API Documentation](https://stdapi.ai/api_overview/)** - Complete OpenAI-compatible API reference
+- **[API Documentation](https://stdapi.ai/api_overview/)** - Complete OpenAI & Anthropic-compatible API reference
 - **[Use Cases & Integrations](https://stdapi.ai/use_cases/)** - Step-by-step guides for Open WebUI, n8n, Continue.dev, and more
 
 ### Product Information
