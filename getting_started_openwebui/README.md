@@ -29,10 +29,42 @@ This sample keeps most Open WebUI settings at their defaults, and explicitly con
    aws sso login --profile your-profile
    ```
 
+> ⚠️ **Requires AWS administrator permissions.** This stack provisions IAM roles and
+> policies, KMS keys, ECS/Fargate, ALB, Aurora PostgreSQL, ElastiCache Valkey, ECR,
+> S3, and networking. A restricted developer profile will fail during `terraform apply`.
+>
+> **Strongly recommended:** deploy into a **sandbox / non-production AWS account first**
+> to evaluate the stack, then replicate into your target account with scoped-down
+> principals once you've validated it.
+
+Before running `terraform apply`, confirm your active AWS identity and region
+(the AWS provider reads them from your environment, not from a Terraform variable):
+```bash
+aws sts get-caller-identity
+aws configure get region
+```
+
 If you use Podman (common on Fedora), set the Docker provider socket in your `terraform.tfvars`:
 ```hcl
 docker_host = "unix:///var/run/user/1000/podman/podman.sock"
 ```
+
+## Get the Code
+
+```bash
+git clone https://github.com/stdapi-ai/samples.git
+cd samples/getting_started_openwebui
+```
+
+<details>
+<summary>No git? Download the ZIP instead</summary>
+
+```bash
+curl -L https://github.com/stdapi-ai/samples/archive/refs/heads/main.zip -o samples.zip
+unzip samples.zip
+cd samples-main/getting_started_openwebui
+```
+</details>
 
 ## Deployment
 
@@ -161,3 +193,12 @@ The solution is to remove the failed Valkey cache from the ElastiCache console a
 When deleting the cache, disable backups, then wait until the full deletion is complete before running `terraform apply`.
 
 If the issue persists, you can try changing the `node_type` in `valkey.tf` (for example, from "cache.t4g.micro" to "cache.t3.micro") before retrying.
+
+### Other common issues
+
+- **`terraform apply` fails with AccessDenied** — your AWS profile lacks administrator permissions. See Prerequisites above.
+- **Docker/Podman build or push errors** — verify the Docker provider socket (`docker_host` in `terraform.tfvars`) and that `aws ecr get-login-password` works with your profile.
+- **Open WebUI loads but model list is empty** — the stdapi.ai service behind it may still be starting; wait 2–3 minutes and refresh.
+- **`503 Service Unavailable`** — ECS tasks are still starting; health checks take a few minutes.
+
+**Full troubleshooting guide:** https://stdapi.ai/operations_troubleshooting/
