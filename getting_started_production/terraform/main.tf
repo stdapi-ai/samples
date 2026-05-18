@@ -76,7 +76,7 @@ module "stdapi_ai" {
   api_key_create = true
 
   # Enable WAF with AWS managed rules
-  alb_waf_enabled             = true
+  alb_waf_enabled             = false
   alb_waf_rate_limit          = 2000 # Requests per 5 minutes per IP
   alb_waf_block_anonymous_ips = true # Block known anonymous IPs
 

@@ -14,7 +14,7 @@ Production-grade infrastructure with HTTPS, WAF protection, and monitoring witho
    ```
 
 > ⚠️ **Requires AWS administrator permissions.** This stack provisions IAM roles and
-> policies, KMS keys, ECS/Fargate, ALB + WAF, and networking. A restricted developer
+> policies, KMS keys, ECS/Fargate, ALB, and networking. A restricted developer
 > profile will fail during `terraform apply`.
 >
 > **Strongly recommended:** deploy into a **sandbox / non-production AWS account first**
@@ -63,7 +63,7 @@ terraform output docs_url
 ## What You Get
 
 - HTTPS with automatic SSL certificate (auto-generated domain)
-- WAF protection with rate limiting and anonymous IP blocking
+- Optional WAF protection with rate limiting and anonymous IP blocking
 - Optional CloudWatch alarms and monitoring
 - Auto-scaling and API key authentication
 - Interactive API documentation at `/docs`
@@ -94,7 +94,7 @@ open "$(terraform output -raw docs_url)"
 
 ```mermaid
 flowchart LR
-  Browser["🌐 Browser"] --> ALB["⚖️ ALB<br/>(HTTPS + WAF)"] --> Stdapi["🤖 stdapi.ai<br/>(ECS Fargate)"]
+  Browser["🌐 Browser"] --> ALB["⚖️ ALB"] --> Stdapi["🤖 stdapi.ai<br/>(ECS Fargate)"]
   Stdapi --> Bedrock["🤖 Amazon Bedrock"]
   Stdapi --> S3["🪣 S3 Bucket"]
   Stdapi --> AIServices["🎙️ AWS AI Services<br/>(Polly, Transcribe, ...)"]
