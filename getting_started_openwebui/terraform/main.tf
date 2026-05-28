@@ -69,7 +69,7 @@ module "stdapi_ai" {
   Select between EU and US configuration.
   */
   aws_bedrock_regions = distinct([
-    data.aws_region.current.name, # Current region (primary)
+    data.aws_region.current.region, # Current region (primary)
     # Common US regions to access almost all models
     "us-east-1", # N. Virginia
     "us-west-2", # Oregon

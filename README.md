@@ -14,12 +14,11 @@
 Perfect for getting started with production workloads. Includes everything needed for secure, scalable deployment in a single AWS region.
 
 **Key Features:**
-- HTTPS with auto-generated ACM certificate & Route53 DNS
-- AWS WAF with rate limiting and IP filtering
+- HTTPS with auto-generated ALB domain (or custom domain with Route53)
 - Auto-scaling (CPU, Memory, Request-based)
-- CloudWatch monitoring & intelligent alarms
-- API key authentication with AWS Systems Manager
 - KMS encryption for all data at rest
+- API key authentication
+- Optional WAF protection and CloudWatch alarms
 
 **Best for:** Most production workloads, quick deployment, single-region requirements
 
@@ -34,7 +33,7 @@ Enterprise-grade deployment ensuring all data processing stays within EU regions
 - Multi-region Bedrock access (4 EU regions: eu-west-3 Paris, eu-west-1 Ireland, eu-central-1 Frankfurt, eu-north-1 Stockholm)
 - Regional S3 buckets for multimodal operations
 - Data residency controls for compliance
-- All production features (HTTPS, WAF, monitoring)
+- All production features (HTTPS, WAF)
 - GDPR-ready infrastructure
 
 **Best for:** Enterprise deployments, GDPR compliance, EU data sovereignty requirements
@@ -50,7 +49,7 @@ Enterprise deployment leveraging multiple US regions for optimal performance and
 - Multi-region Bedrock access (3 US regions: us-east-1, us-west-2, us-east-2)
 - Regional S3 buckets for optimal performance
 - Cross-region failover and load balancing
-- All production features (HTTPS, WAF, monitoring)
+- All production features (HTTPS, WAF)
 - Maximum US availability
 
 **Best for:** Enterprise deployments, US data residency, high availability requirements

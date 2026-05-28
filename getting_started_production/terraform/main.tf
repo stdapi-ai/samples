@@ -8,10 +8,9 @@ monitoring in a single AWS region. Ideal for most production workloads.
 Features:
 - Public ALB with HTTPS (auto-generated domain)
 - IP address restriction (your current IP only)
-- WAF with rate limiting and anonymous IP blocking
 - API key authentication
-- CloudWatch alarms and monitoring
 - Interactive API documentation (/docs)
+- Optional: WAF protection, CloudWatch alarms
 ============================================================================
 */
 
@@ -75,10 +74,10 @@ module "stdapi_ai" {
   # Generate API key for authentication
   api_key_create = true
 
-  # Enable WAF with AWS managed rules
-  alb_waf_enabled             = false
-  alb_waf_rate_limit          = 2000 # Requests per 5 minutes per IP
-  alb_waf_block_anonymous_ips = true # Block known anonymous IPs
+  # Optional: Enable WAF with AWS managed rules
+  # alb_waf_enabled             = true
+  # alb_waf_rate_limit          = 2000 # Requests per 5 minutes per IP
+  # alb_waf_block_anonymous_ips = true # Block known anonymous IPs
 
   /*
   --------------------------------------------------------------------------

@@ -121,6 +121,8 @@ alb_ingress_ipv4_cidrs = [
 The configuration works out of the box. To customize (optional):
 
 - **Custom domain**: Uncomment `alb_domain_name` in `main.tf`
+- **WAF protection**: Uncomment the `alb_waf_enabled` block in `main.tf`
+- **CloudWatch alarms**: Uncomment `alarms_enabled` in `main.tf`
 - **SNS notifications**: Uncomment `sns_topic_arn` in `main.tf`
 - **Disable /docs**: Set `enable_docs = false` in `main.tf`
 
@@ -139,7 +141,7 @@ terraform destroy
 
 - Terraform/OpenTofu >= 1.5
 - stdapi.ai Terraform module ~> 1.0
-- AWS Provider >= 4.0
+- AWS Provider >= 6.0
 
 ## Troubleshooting
 

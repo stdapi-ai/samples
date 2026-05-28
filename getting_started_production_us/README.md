@@ -136,8 +136,9 @@ alb_ingress_ipv4_cidrs = [
 The configuration works out of the box with US regions. To customize (optional):
 
 - **Custom domain**: Uncomment `alb_domain_name` in `main.tf`
+- **CloudWatch alarms**: Uncomment `alarms_enabled` in `main.tf`
 - **SNS notifications**: Uncomment `sns_topic_arn` in `main.tf`
-- **Different regions**: Edit `aws_bedrock_regions` and provider configurations in `main.tf`
+- **Different regions**: Edit `aws_bedrock_regions` and the `provider "aws"` region in `main.tf`
 - **Disable /docs**: Set `enable_docs = false` in `main.tf`
 
 ## Cleanup
@@ -155,7 +156,7 @@ terraform destroy
 
 - Terraform/OpenTofu >= 1.5
 - stdapi.ai Terraform module ~> 1.0
-- AWS Provider >= 4.0
+- AWS Provider >= 6.0
 
 ## Troubleshooting
 

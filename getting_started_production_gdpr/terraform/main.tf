@@ -11,7 +11,7 @@ Features:
 - IP address restriction (your current IP only)
 - WAF with rate limiting and anonymous IP blocking
 - API key authentication
-- CloudWatch alarms and monitoring
+- Optional CloudWatch alarms and monitoring
 - Interactive API documentation (/docs)
 - Multi-region Bedrock support (EU only) for wider model access
 - Regional data residency for GDPR compliance
@@ -85,20 +85,7 @@ module "stdapi_ai" {
     "eu-north-1"    # Stockholm
   ]
 
-  /*
-  Regional S3 buckets for Bedrock multimodal operations
-  Required by some models for processing images, documents, etc.
-  */
-  aws_s3_regional_buckets = merge(
-    module.bedrock_bucket_eu_west_1.regional_bucket_map,
-    module.bedrock_bucket_eu_central_1.regional_bucket_map,
-    module.bedrock_bucket_eu_north_1.regional_bucket_map,
-  )
-  aws_s3_buckets_kms_keys_arns = [
-    module.bedrock_bucket_eu_west_1.kms_key_arn,
-    module.bedrock_bucket_eu_central_1.kms_key_arn,
-    module.bedrock_bucket_eu_north_1.kms_key_arn,
-  ]
+  # Regional S3 buckets are created automatically for each region in aws_bedrock_regions.
 
   /*
   --------------------------------------------------------------------------
@@ -163,60 +150,6 @@ Main provider for primary deployment region (Paris)
 
 provider "aws" {
   region = "eu-west-3"
-}
-
-/*
-----------------------------------------------------------------------------
-Regional S3 Buckets and Providers
-----------------------------------------------------------------------------
-These buckets are required for Bedrock multimodal operations in each region
-They store temporary data for processing images, documents, etc.
-Each bucket is paired with its regional provider.
-*/
-
-module "bedrock_bucket_eu_west_1" {
-  source  = "stdapi-ai/stdapi-ai-s3-regional-bucket/aws"
-  version = "~> 1.0"
-
-  providers           = { aws = aws.eu-west-1 }
-  name_prefix         = module.stdapi_ai.name_prefix
-  aws_s3_tmp_prefix   = module.stdapi_ai.aws_s3_tmp_prefix
-  deletion_protection = module.stdapi_ai.deletion_protection
-}
-
-provider "aws" {
-  alias  = "eu-west-1"
-  region = "eu-west-1"
-}
-
-module "bedrock_bucket_eu_central_1" {
-  source  = "stdapi-ai/stdapi-ai-s3-regional-bucket/aws"
-  version = "~> 1.0"
-
-  providers           = { aws = aws.eu-central-1 }
-  name_prefix         = module.stdapi_ai.name_prefix
-  aws_s3_tmp_prefix   = module.stdapi_ai.aws_s3_tmp_prefix
-  deletion_protection = module.stdapi_ai.deletion_protection
-}
-
-provider "aws" {
-  alias  = "eu-central-1"
-  region = "eu-central-1"
-}
-
-module "bedrock_bucket_eu_north_1" {
-  source  = "stdapi-ai/stdapi-ai-s3-regional-bucket/aws"
-  version = "~> 1.0"
-
-  providers           = { aws = aws.eu-north-1 }
-  name_prefix         = module.stdapi_ai.name_prefix
-  aws_s3_tmp_prefix   = module.stdapi_ai.aws_s3_tmp_prefix
-  deletion_protection = module.stdapi_ai.deletion_protection
-}
-
-provider "aws" {
-  alias  = "eu-north-1"
-  region = "eu-north-1"
 }
 
 /*
