@@ -115,9 +115,28 @@ Access is restricted to your current IP address:
 To configure your AWS regions and compliance/sovereignty, edit `terraform/main.tf` and 
 adjust it to your EU or US configuration.
 
+### Model Configuration
+
+The default models used in this deployment are pre-configured in `terraform/openwebui.tf`. When selecting models for your deployment, consider:
+
+- **Your needs**: Choose models based on your primary use case (chat, coding, embeddings, image generation, etc.)
+- **Regional availability**: Not all models are available in all AWS regions. Check [AWS Bedrock Models](https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html) for your region
+- **Cost**: Model pricing varies significantly; evaluate your workload and select the most cost-effective option
+
+To customize models, edit `terraform/openwebui.tf` and update the corresponding environment variables:
+- `TASK_MODEL_EXTERNAL` — chat and task completion (default: `amazon.nova-micro-v1:0`)
+- `RAG_EMBEDDING_MODEL` — text embeddings for RAG (default: `cohere.embed-v4:0`)
+- `IMAGE_GENERATION_MODEL` & `IMAGE_EDIT_MODEL` — image generation and editing (default: `stability.stable-image-core-v1:1`)
+- `AUDIO_STT_MODEL` — speech-to-text (default: `amazon.transcribe`)
+- `AUDIO_TTS_MODEL` — text-to-speech (default: `amazon.polly-neural`)
+
+**Note**: Amazon Nova Canvas has been deprecated. Use `stability.stable-image-core-v1:1` for image generation and editing instead.
+
+For more details, see the [Open WebUI documentation](https://docs.openwebui.com/getting-started/env-configuration).
+
 ### Open WebUI features
 
-To enable optional features, edit `terraform/openwebui.tf` and adjust the corresponding
+To enable optional features beyond model configuration, edit `terraform/openwebui.tf` and adjust the corresponding
 variables based on the [Open WebUI documentation](https://docs.openwebui.com/getting-started/env-configuration).
 
 ### HTTPS configuration
