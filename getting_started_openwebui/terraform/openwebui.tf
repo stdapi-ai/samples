@@ -149,7 +149,7 @@ module "openwebui" {
         /* S3 Storage */
         STORAGE_PROVIDER = "s3"
         S3_BUCKET_NAME   = module.stdapi_ai.bucket_id
-        S3_REGION_NAME   = data.aws_region.current.id
+        S3_REGION_NAME   = data.aws_region.current.region
         S3_KEY_PREFIX    = "openwebui/"
 
         /* Avoid downloading external models */
