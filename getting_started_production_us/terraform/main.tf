@@ -120,16 +120,6 @@ module "stdapi_ai" {
   # sns_topic_arn = "arn:aws:sns:us-east-1:123456789012:alerts"
 }
 
-/*
-----------------------------------------------------------------------------
-AWS Provider Configuration
-----------------------------------------------------------------------------
-Main provider for primary deployment region (N. Virginia)
-*/
-
-provider "aws" {
-  region = "us-east-1"
-}
 
 /*
 ----------------------------------------------------------------------------

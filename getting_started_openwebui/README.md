@@ -181,7 +181,7 @@ terraform destroy
 
 - Terraform/OpenTofu >= 1.5
 - stdapi.ai Terraform module ~> 1.0
-- AWS Provider >= 5.0
+- AWS Provider >= 6.27.0
 
 ## Additional Resources
 

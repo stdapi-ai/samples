@@ -141,16 +141,6 @@ module "stdapi_ai" {
   # sns_topic_arn = "arn:aws:sns:eu-west-3:123456789012:alerts"
 }
 
-/*
-----------------------------------------------------------------------------
-AWS Provider Configuration
-----------------------------------------------------------------------------
-Main provider for primary deployment region (Paris)
-*/
-
-provider "aws" {
-  region = "eu-west-3"
-}
 
 /*
 ----------------------------------------------------------------------------
