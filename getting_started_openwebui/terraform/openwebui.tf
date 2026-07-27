@@ -20,6 +20,9 @@ Docker image & ECR Repository
 resource "aws_ecr_repository" "openwebui" {
   name         = "${local.name_prefix}-openwebui"
   force_delete = true
+  image_scanning_configuration {
+    scan_on_push = true
+  }
 }
 
 resource "aws_ecr_lifecycle_policy" "openwebui" {
@@ -140,10 +143,8 @@ module "openwebui" {
         PLAYWRIGHT_WS_URL = local.playwright_url
 
         /* Databases - Redis/Valkey */
-        REDIS_URL                = "redis://${local.valkey_address}/0"
         REDIS_CLUSTER            = "false" # Set to true when using ElastiCache Valkey with cluster_mode = "enabled"
         WEBSOCKET_MANAGER        = "redis"
-        WEBSOCKET_REDIS_URL      = "redis://${local.valkey_address}/1"
         ENABLE_WEBSOCKET_SUPPORT = "true"
 
         /* S3 Storage */
@@ -178,9 +179,11 @@ module "openwebui" {
         /* Global */
         WEBUI_SECRET_KEY = random_password.openwebui_secret_key.result
 
-        /* Database URLs with passwords */
-        DATABASE_URL    = local.postgres_url_main
-        PGVECTOR_DB_URL = local.postgres_url_vector
+        /* Database URLs with passwords (TLS enabled) */
+        DATABASE_URL        = local.postgres_url_main
+        PGVECTOR_DB_URL     = local.postgres_url_vector
+        REDIS_URL           = "rediss://:${random_password.valkey_auth_token.result}@${local.valkey_address}/0"
+        WEBSOCKET_REDIS_URL = "rediss://:${random_password.valkey_auth_token.result}@${local.valkey_address}/1"
 
         /* stdapi.ai API key */
         OPENAI_API_KEY             = module.stdapi_ai.api_key

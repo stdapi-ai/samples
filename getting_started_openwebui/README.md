@@ -161,6 +161,14 @@ with AWS Cognito or other identity providers.
 This sample uses the minimum Aurora and ElastiCache instance sizes for cost. 
 For production, increase the instance class and add readers or Multi-AZ configuration to enable high availability.
 
+### Production hardening
+
+This sample favors low cost and easy cleanup over durability. Before promoting it to production, review these deltas:
+
+- **Aurora PostgreSQL**: deletion protection is disabled, backups keep the default 1-day retention, and the final snapshot is skipped on destroy (`skip_final_snapshot`). Enable deletion protection, extend backup retention, and take final snapshots.
+- **ElastiCache Valkey**: single node with no automatic backups. Add replicas or Multi-AZ and enable snapshot retention.
+- **ALB**: access logging is not enabled and no WAF is attached. Enable ALB access logs to a dedicated S3 bucket and consider AWS WAF (see the production samples for a WAF-enabled configuration).
+
 ### Microservices interconnections
 
 This sample uses ECS with service discovery to enable communication between microservices.

@@ -20,8 +20,8 @@ locals {
   postgres_openwebui_database        = "openwebui"
   postgres_openwebui_database_vector = "openwebui_vector"
 
-  postgres_url_main   = "postgresql://${local.postgres_openwebui_username}:${random_password.postgres_openwebui_user.result}@${local.postgres_address}:${local.postgres_port}/${local.postgres_openwebui_database}"
-  postgres_url_vector = "postgresql://${local.postgres_openwebui_username}:${random_password.postgres_openwebui_user.result}@${local.postgres_address}:${local.postgres_port}/${local.postgres_openwebui_database_vector}"
+  postgres_url_main   = "postgresql://${local.postgres_openwebui_username}:${random_password.postgres_openwebui_user.result}@${local.postgres_address}:${local.postgres_port}/${local.postgres_openwebui_database}?sslmode=require"
+  postgres_url_vector = "postgresql://${local.postgres_openwebui_username}:${random_password.postgres_openwebui_user.result}@${local.postgres_address}:${local.postgres_port}/${local.postgres_openwebui_database_vector}?sslmode=require"
 
   rds_data_exec = "aws rds-data execute-statement --resource-arn ${aws_rds_cluster.postgres.arn} --secret-arn ${aws_secretsmanager_secret.postgres_master.arn}"
 }
@@ -154,7 +154,11 @@ resource "null_resource" "postgres_app_user" {
     password    = local.postgres_openwebui_password
   }
   provisioner "local-exec" {
-    command = "${local.rds_data_exec} --database ${local.postgres_openwebui_database} --sql \"DO \\$\\$ BEGIN IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename = '${local.postgres_openwebui_username}') THEN CREATE ROLE ${local.postgres_openwebui_username} WITH LOGIN PASSWORD '${local.postgres_openwebui_password}'; END IF; END \\$\\$;\""
+    # Password is passed via environment variable to keep it out of the command line
+    command = "${local.rds_data_exec} --database ${local.postgres_openwebui_database} --sql \"DO \\$\\$ BEGIN IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename = '${local.postgres_openwebui_username}') THEN CREATE ROLE ${local.postgres_openwebui_username} WITH LOGIN PASSWORD '$POSTGRES_APP_PASSWORD'; END IF; END \\$\\$;\""
+    environment = {
+      POSTGRES_APP_PASSWORD = local.postgres_openwebui_password
+    }
   }
   depends_on = [null_resource.postgres_pgvector_extension, aws_secretsmanager_secret_version.postgres_master]
 }

@@ -36,9 +36,10 @@ resource "aws_security_group" "alb" {
 }
 
 resource "aws_lb" "alb" {
-  name            = "${local.name_prefix}-alb"
-  security_groups = [aws_security_group.alb.id]
-  subnets         = module.vpc.public_subnets_ids
+  name                       = "${local.name_prefix}-alb"
+  security_groups            = [aws_security_group.alb.id]
+  subnets                    = module.vpc.public_subnets_ids
+  drop_invalid_header_fields = true
 }
 
 resource "aws_vpc_security_group_ingress_rule" "alb_listener" {

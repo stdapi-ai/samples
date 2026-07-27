@@ -73,7 +73,7 @@ module "stdapi_ai" {
     # Common US regions to access almost all models
     "us-east-1", # N. Virginia
     "us-west-2", # Oregon
-    "us-east-2",  # Ohio
+    "us-east-2", # Ohio
 
     # EU regions
     # "eu-west-3",    # Paris (primary)

@@ -21,6 +21,9 @@ Docker image & ECR Repository
 resource "aws_ecr_repository" "playwright" {
   name         = "${local.name_prefix}-playwright"
   force_delete = true
+  image_scanning_configuration {
+    scan_on_push = true
+  }
 }
 
 resource "aws_ecr_lifecycle_policy" "playwright" {

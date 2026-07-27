@@ -41,9 +41,16 @@ resource "aws_elasticache_replication_group" "valkey" {
   security_group_ids         = [aws_security_group.valkey.id]
   at_rest_encryption_enabled = true
   kms_key_id                 = module.vpc.kms_key_arn
+  transit_encryption_enabled = true
+  auth_token                 = random_password.valkey_auth_token.result
   lifecycle {
     ignore_changes = [engine_version]
   }
+}
+
+resource "random_password" "valkey_auth_token" {
+  length  = 32
+  special = false
 }
 
 /*

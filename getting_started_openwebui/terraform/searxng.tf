@@ -20,6 +20,9 @@ Docker image & ECR Repository
 resource "aws_ecr_repository" "searxng" {
   name         = "${local.name_prefix}-searxng"
   force_delete = true
+  image_scanning_configuration {
+    scan_on_push = true
+  }
 }
 
 resource "aws_ecr_lifecycle_policy" "searxng" {
@@ -85,7 +88,8 @@ module "searxng" {
         SEARXNG_PORT = tostring(local.searxng_port)
       }
       secrets = {
-        SEARXNG_VALKEY_URL = "valkey://${local.valkey_address}/2"
+        # "valkeys" scheme enables TLS to ElastiCache
+        SEARXNG_VALKEY_URL = "valkeys://:${random_password.valkey_auth_token.result}@${local.valkey_address}/2"
         SEARXNG_SECRET     = random_password.searxng_secret_key.result
       }
     }
