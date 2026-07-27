@@ -95,6 +95,9 @@ resource "aws_acm_certificate" "alb" {
   count             = local.alb_dns_enabled ? 1 : 0
   domain_name       = var.alb_domain_name
   validation_method = "DNS"
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_route53_record" "alb_validation" {

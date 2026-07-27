@@ -50,19 +50,19 @@ module "stdapi_ai" {
   --------------------------------------------------------------------------
   */
   subnet_ids        = module.vpc.subnets_ids
-  security_group_id = coalesce(module.vpc.security_group_id)
+  security_group_id = module.vpc.security_group_id
 
   /*
   --------------------------------------------------------------------------
   Service Discovery Configuration
   --------------------------------------------------------------------------
   */
-  service_discovery_dns_namespace_id = coalesce(aws_service_discovery_private_dns_namespace.internal.id)
+  service_discovery_dns_namespace_id = aws_service_discovery_private_dns_namespace.internal.id
   service_discovery_dns_name         = "stdapi-ai"
 
   /*
   --------------------------------------------------------------------------
-  AWS Bedrock Multi-Region Configuration
+  Amazon Bedrock Multi-Region Configuration
   --------------------------------------------------------------------------
   Models will be accessed from these regions in order of preference
 
@@ -86,12 +86,10 @@ module "stdapi_ai" {
   --------------------------------------------------------------------------
   Sovereignty/Compliance configuration (GDPR, HIPAA, ...)
   --------------------------------------------------------------------------
-  Disable global cross-region inference to keep all data within your global
-  region (EU or US, based on your aws_bedrock_regions selected regions)
-  This ensures AWS Bedrock only routes requests within specified regions
-
-  Set to "false" if you need compliance/Sovereignty,
-  and "true" if you prefer higher availability
+  Amazon Bedrock global cross-region inference:
+  true (default) prefers availability by letting Bedrock route requests
+  through its global inference profiles; set to false for data sovereignty,
+  keeping all traffic within your selected aws_bedrock_regions (EU or US)
   */
   aws_bedrock_cross_region_inference_global = true
 

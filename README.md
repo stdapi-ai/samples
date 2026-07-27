@@ -1,6 +1,6 @@
 # stdapi.ai Deployment Examples
 
-**Production-ready Terraform examples** for deploying [stdapi.ai](https://stdapi.ai) — an OpenAI & Anthropic compatible API gateway for AWS Bedrock. **14-day free trial included.**
+**Production-ready Terraform examples** for deploying [stdapi.ai](https://stdapi.ai) — an OpenAI, Anthropic & Cohere compatible API gateway for Amazon Bedrock. **14-day free trial included.**
 
 [Start 14-Day Free Trial](https://stdapi.ai/operations_getting_started/) · [Documentation](https://stdapi.ai) · [GitHub Repository](https://github.com/stdapi-ai/stdapi.ai)
 

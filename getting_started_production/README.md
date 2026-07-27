@@ -150,7 +150,7 @@ Most common first-deployment issues:
 - **`503 Service Unavailable` for 2–3 minutes after apply** — ECS service is still starting; wait a few minutes and retry.
 - **Browser TLS warning on `docs_url`** — the auto-generated `*.elb.amazonaws.com` domain has no trusted certificate; safe to bypass for testing. Use `alb_domain_name` for a custom domain.
 - **`terraform apply` fails with AccessDenied on IAM/KMS/ECS** — your AWS profile lacks administrator permissions. See Prerequisites above.
-- **`403 Unauthorized` on API calls** — pass the key in the `Authorization: Bearer <key>` (OpenAI) or `x-api-key` (Anthropic) header.
+- **`401 Unauthorized` on API calls** — pass the key in the `Authorization: Bearer <key>` (OpenAI) or `x-api-key` (Anthropic) header.
 - **`404 Not Found` for a model** — list every discovered model with full details via `GET /search_models` (the default model-discovery endpoint), or filter by capability with query parameters (`?route=/v1/chat/completions&streaming=true`). `GET /v1/models` is also available for strict OpenAI SDK compatibility. See https://stdapi.ai/api_search_models/.
 
 **Full troubleshooting guide:** https://stdapi.ai/operations_troubleshooting/

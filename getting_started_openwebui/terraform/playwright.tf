@@ -90,7 +90,7 @@ module "playwright" {
     }
   }
 
-  service_discovery_dns_namespace_id = coalesce(aws_service_discovery_private_dns_namespace.internal.id)
+  service_discovery_dns_namespace_id = aws_service_discovery_private_dns_namespace.internal.id
   service_discovery_dns_name         = "playwright"
 
   depends_on = [docker_registry_image.playwright]

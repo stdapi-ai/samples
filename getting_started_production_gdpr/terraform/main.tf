@@ -73,7 +73,7 @@ module "stdapi_ai" {
 
   /*
   --------------------------------------------------------------------------
-  AWS Bedrock Multi-Region Configuration
+  Amazon Bedrock Multi-Region Configuration
   --------------------------------------------------------------------------
   EU regions for model availability and redundancy
   Models will be accessed from these regions in order of preference
@@ -92,7 +92,7 @@ module "stdapi_ai" {
   GDPR Compliance Configuration
   --------------------------------------------------------------------------
   Disable global cross-region inference to keep all data within EU
-  This ensures AWS Bedrock only routes requests within specified EU regions
+  This ensures Amazon Bedrock only routes requests within specified EU regions
   */
   aws_bedrock_cross_region_inference_global = false
 

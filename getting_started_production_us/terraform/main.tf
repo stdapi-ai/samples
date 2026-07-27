@@ -71,7 +71,7 @@ module "stdapi_ai" {
 
   /*
   --------------------------------------------------------------------------
-  AWS Bedrock Multi-Region Configuration
+  Amazon Bedrock Multi-Region Configuration
   --------------------------------------------------------------------------
   US regions for model availability
   These regions provide access to all available models

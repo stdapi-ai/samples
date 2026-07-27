@@ -11,7 +11,7 @@ This sample keeps most Open WebUI settings at their defaults, and explicitly con
 - **Model provider**: stdapi.ai exposed as an OpenAI-compatible API backend
 - **Default models**: Amazon Bedrock models for chat and tasks (Claude, Mistral, Qwen, etc.)
 - **Image features**: image generation and editing via Bedrock (using Stability AI models)
-- **Speech**: STT (AWS Transcribe) and TTS (AWS Polly)
+- **Speech**: STT (Amazon Transcribe) and TTS (Amazon Polly)
 - **Web search & scraping**: SearXNG and Playwright
 - **RAG storage**: Aurora PostgreSQL with pgvector and Cohere embedding models
 - **Cache & files**: ElastiCache Valkey and S3
@@ -74,7 +74,7 @@ terraform init
 terraform apply
 ```
 
-After deployment (wait 15-30 minutes for services to be ready):
+After deployment (about 20 minutes for all services to be ready):
 
 ```bash
 # Get the Open WebUI URL
@@ -120,7 +120,7 @@ adjust it to your EU or US configuration.
 The default models used in this deployment are pre-configured in `terraform/openwebui.tf`. When selecting models for your deployment, consider:
 
 - **Your needs**: Choose models based on your primary use case (chat, coding, embeddings, image generation, etc.)
-- **Regional availability**: Not all models are available in all AWS regions. Check [AWS Bedrock Models](https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html) for your region
+- **Regional availability**: Not all models are available in all AWS regions. Check [Amazon Bedrock Models](https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html) for your region
 - **Cost**: Model pricing varies significantly; evaluate your workload and select the most cost-effective option
 
 To customize models, edit `terraform/openwebui.tf` and update the corresponding environment variables:
@@ -201,7 +201,7 @@ terraform destroy
 - [Open WebUI Documentation](https://docs.openwebui.com/)
 - [stdapi.ai Configuration Guide](https://stdapi.ai/operations_configuration/)
 - [Terraform Module Documentation](https://github.com/stdapi-ai/terraform-aws-stdapi-ai)
-- [AWS Bedrock Models](https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html)
+- [Amazon Bedrock Models](https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html)
 
 ## Troubleshooting
 
