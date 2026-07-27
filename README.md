@@ -91,7 +91,7 @@ Full-featured deployment of Open WebUI powered by stdapi.ai. Includes web search
 1. **AWS Marketplace Subscription** — [Start 14-day free trial](https://stdapi.ai/operations_getting_started/) (includes hardened container images and commercial license)
 2. **Terraform or OpenTofu** — Install [Terraform](https://www.terraform.io/downloads) or [OpenTofu](https://opentofu.org/docs/intro/install/) >= 1.5
 3. **AWS Credentials** — Configure [AWS credentials](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) with appropriate permissions
-4. **Domain Name** (production examples only) — A domain managed in Route53 for HTTPS setup
+4. **Domain Name** (optional) — A domain managed in Route53, to serve HTTPS from your own name instead of the auto-generated ALB domain. Set `alb_domain_name` in `main.tf` to use it.
 
 ### Deploy
 

@@ -100,8 +100,11 @@ module "stdapi_ai" {
   --------------------------------------------------------------------------
   AI Services Regional Configuration
   --------------------------------------------------------------------------
-  AWS Comprehend is not available in eu-west-3, use eu-west-1 instead
-  Required for features that use AWS Comprehend
+  AWS Comprehend is not offered in eu-west-3. Left unset, every region above
+  is a candidate and calls fail over automatically, but each one would still
+  probe eu-west-3 and fail before reaching Ireland. Pinning the region avoids
+  that wasted round trip, at the cost of no failover for Comprehend.
+  All candidates stay in the EU either way, so GDPR compliance is unaffected.
   */
   aws_comprehend_region = "eu-west-1"
 
