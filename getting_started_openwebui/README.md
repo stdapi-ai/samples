@@ -126,11 +126,12 @@ The default models used in this deployment are pre-configured in `terraform/open
 To customize models, edit `terraform/openwebui.tf` and update the corresponding environment variables:
 - `TASK_MODEL_EXTERNAL` — chat and task completion (default: `amazon.nova-micro-v1:0`)
 - `RAG_EMBEDDING_MODEL` — text embeddings for RAG (default: `cohere.embed-v4:0`)
-- `IMAGE_GENERATION_MODEL` & `IMAGE_EDIT_MODEL` — image generation and editing (default: `stability.stable-image-core-v1:1`)
+- `IMAGE_GENERATION_MODEL` — image generation (default: `stability.stable-image-core-v1:1`)
+- `IMAGE_EDIT_MODEL` — image editing (default: `stability.stable-image-control-structure-v1:0`)
 - `AUDIO_STT_MODEL` — speech-to-text (default: `amazon.transcribe`)
 - `AUDIO_TTS_MODEL` — text-to-speech (default: `amazon.polly-neural`)
 
-**Note**: Amazon Nova Canvas has been deprecated. Use `stability.stable-image-core-v1:1` for image generation and editing instead.
+**Note**: Amazon Nova Canvas reaches end of life on September 30, 2026. Use `stability.stable-image-core-v1:1` for image generation and `stability.stable-image-control-structure-v1:0` for image editing instead.
 
 For more details, see the [Open WebUI documentation](https://docs.openwebui.com/getting-started/env-configuration).
 
@@ -182,6 +183,9 @@ terraform destroy
 - Terraform/OpenTofu >= 1.5
 - stdapi.ai Terraform module ~> 1.0
 - AWS Provider >= 6.27.0
+- Open WebUI `v0.11.0` (slim image variant)
+- SearXNG `2026.7.26`
+- Playwright `1.60.0` (must match the version pinned in the Open WebUI release)
 
 ## Additional Resources
 

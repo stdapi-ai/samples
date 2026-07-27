@@ -8,7 +8,7 @@ Deploys Open WebUI using ECS Fargate with stdapi.ai as the OpenAI backend
 locals {
   openwebui_port         = 8080
   openwebui_source_image = "ghcr.io/open-webui/open-webui:${local.openwebui_image_tag}"
-  openwebui_ecr_image    = "${aws_ecr_repository.openwebui.repository_url}:${local.openwebui_image_tag}-slim"
+  openwebui_ecr_image    = "${aws_ecr_repository.openwebui.repository_url}:${local.openwebui_image_tag}"
 }
 
 /*
@@ -118,7 +118,7 @@ module "openwebui" {
         ENABLE_IMAGE_EDIT               = "true"
         IMAGE_EDIT_ENGINE               = "openai"
         IMAGES_EDIT_OPENAI_API_BASE_URL = local.stdapi_openai_api_url
-        IMAGE_EDIT_MODEL                = "stability.stable-image-core-v1:1"
+        IMAGE_EDIT_MODEL                = "stability.stable-image-control-structure-v1:0"
 
         /* Speech to Text */
         AUDIO_STT_ENGINE              = "openai"

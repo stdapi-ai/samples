@@ -23,14 +23,14 @@ Centralized image tag definitions for all container images
 */
 
 locals {
-  openwebui_image_tag = "latest"
-  searxng_image_tag   = "latest"
+  openwebui_image_tag = "v0.11.0-slim"
+  searxng_image_tag   = "2026.7.26-b060c780d"
 
   /*
-  Must match configured version in this file (Search "playwright==")
-  https://github.com/open-webui/open-webui/blob/main/backend/requirements.txt
+  Must match the version pinned in the Open WebUI release above (Search "playwright==")
+  https://github.com/open-webui/open-webui/blob/v0.11.0/backend/requirements.txt
   */
-  playwright_version = "1.57.0"
+  playwright_version = "1.60.0"
 }
 
 /*
