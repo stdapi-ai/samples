@@ -95,7 +95,7 @@ module "searxng" {
     }
   }
 
-  service_discovery_dns_namespace_id = aws_service_discovery_private_dns_namespace.internal.id
+  service_discovery_dns_namespace_id = local.internal_namespace_id
   service_discovery_dns_name         = "searxng"
 
   security_group_connect_egress = {

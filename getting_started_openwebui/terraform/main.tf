@@ -57,7 +57,7 @@ module "stdapi_ai" {
   Service Discovery Configuration
   --------------------------------------------------------------------------
   */
-  service_discovery_dns_namespace_id = aws_service_discovery_private_dns_namespace.internal.id
+  service_discovery_dns_namespace_id = local.internal_namespace_id
   service_discovery_dns_name         = "stdapi-ai"
 
   /*
@@ -120,6 +120,14 @@ Private DNS namespace for internal service communication
 
 locals {
   internal_namespace = local.name_prefix
+
+  /*
+  The ID stays unknown until the namespace is created, but coalesce() marks it
+  as never null. Modules that decide whether to create service discovery
+  entries by comparing it to null can then resolve that decision during the
+  first plan, which keeps a single `terraform apply` working on an empty state.
+  */
+  internal_namespace_id = coalesce(aws_service_discovery_private_dns_namespace.internal.id)
 }
 
 resource "aws_service_discovery_private_dns_namespace" "internal" {
