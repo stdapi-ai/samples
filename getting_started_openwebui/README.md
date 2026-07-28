@@ -14,6 +14,7 @@ This sample keeps most Open WebUI settings at their defaults, and explicitly con
 - **Speech**: STT (Amazon Transcribe) and TTS (Amazon Polly)
 - **Web search & scraping**: SearXNG and Playwright
 - **RAG storage**: Aurora PostgreSQL with pgvector and Cohere embedding models
+- **RAG reranking**: hybrid search with Amazon Bedrock reranking through the stdapi.ai Cohere-compatible endpoint
 - **Cache & files**: ElastiCache Valkey and S3
 - **Security**: KMS encryption for storage and databases
 - **Offline mode**: Open WebUI is configured to only use stdapi.ai, Bedrock, and AWS services
@@ -126,10 +127,13 @@ The default models used in this deployment are pre-configured in `terraform/open
 To customize models, edit `terraform/openwebui.tf` and update the corresponding environment variables:
 - `TASK_MODEL_EXTERNAL` — chat and task completion (default: `amazon.nova-micro-v1:0`)
 - `RAG_EMBEDDING_MODEL` — text embeddings for RAG (default: `cohere.embed-v4:0`)
+- `RAG_RERANKING_MODEL` — reranking for hybrid RAG search (default: `cohere.rerank-v3-5:0`)
 - `IMAGE_GENERATION_MODEL` — image generation (default: `stability.stable-image-core-v1:1`)
 - `IMAGE_EDIT_MODEL` — image editing (default: `stability.stable-image-control-structure-v1:0`)
 - `AUDIO_STT_MODEL` — speech-to-text (default: `amazon.transcribe`)
 - `AUDIO_TTS_MODEL` — text-to-speech (default: `amazon.polly-neural`)
+
+**Note**: Amazon Bedrock reranking is available in only a few regions (`us-west-2` and `eu-central-1` carry both rerank models). The default region lists include one of them, and stdapi.ai fails over to it automatically. If you narrow `aws_bedrock_regions`, keep a reranking region in the list or set `ENABLE_RAG_HYBRID_SEARCH` to `false` to disable reranking.
 
 **Note**: Amazon Nova Canvas reaches end of life on September 30, 2026. Use `stability.stable-image-core-v1:1` for image generation and `stability.stable-image-control-structure-v1:0` for image editing instead.
 

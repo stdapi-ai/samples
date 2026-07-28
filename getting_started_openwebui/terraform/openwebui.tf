@@ -111,6 +111,12 @@ module "openwebui" {
         VECTOR_DB                 = "pgvector" # Aurora PostgreSQL with Vector extension
         PGVECTOR_CREATE_EXTENSION = "false"    # Already initialized
 
+        /* RAG reranking (hybrid search, Cohere-compatible endpoint) */
+        ENABLE_RAG_HYBRID_SEARCH  = "true"
+        RAG_RERANKING_ENGINE      = "external"
+        RAG_EXTERNAL_RERANKER_URL = local.stdapi_rerank_url
+        RAG_RERANKING_MODEL       = "cohere.rerank-v3-5:0"
+
         /* Image generation */
         ENABLE_IMAGE_GENERATION    = "true"
         IMAGE_GENERATION_ENGINE    = "openai"
@@ -186,12 +192,13 @@ module "openwebui" {
         WEBSOCKET_REDIS_URL = "rediss://:${random_password.valkey_auth_token.result}@${local.valkey_address}/1"
 
         /* stdapi.ai API key */
-        OPENAI_API_KEY             = module.stdapi_ai.api_key
-        RAG_OPENAI_API_KEY         = module.stdapi_ai.api_key
-        IMAGES_OPENAI_API_KEY      = module.stdapi_ai.api_key
-        IMAGES_EDIT_OPENAI_API_KEY = module.stdapi_ai.api_key
-        AUDIO_STT_OPENAI_API_KEY   = module.stdapi_ai.api_key
-        AUDIO_TTS_OPENAI_API_KEY   = module.stdapi_ai.api_key
+        OPENAI_API_KEY                = module.stdapi_ai.api_key
+        RAG_OPENAI_API_KEY            = module.stdapi_ai.api_key
+        RAG_EXTERNAL_RERANKER_API_KEY = module.stdapi_ai.api_key
+        IMAGES_OPENAI_API_KEY         = module.stdapi_ai.api_key
+        IMAGES_EDIT_OPENAI_API_KEY    = module.stdapi_ai.api_key
+        AUDIO_STT_OPENAI_API_KEY      = module.stdapi_ai.api_key
+        AUDIO_TTS_OPENAI_API_KEY      = module.stdapi_ai.api_key
       }
       mount_points = {
         data = {

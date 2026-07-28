@@ -135,7 +135,9 @@ Automatically detect your current public IP address for ALB security group
 */
 
 locals {
-  stdapi_openai_api_url = "http://${module.stdapi_ai.service_discovery_service_name}.${local.internal_namespace}:${module.stdapi_ai.port}/v1"
+  stdapi_url            = "http://${module.stdapi_ai.service_discovery_service_name}.${local.internal_namespace}:${module.stdapi_ai.port}"
+  stdapi_openai_api_url = "${local.stdapi_url}/v1"
+  stdapi_rerank_url     = "${local.stdapi_url}/cohere/v2/rerank"
   name_prefix           = module.stdapi_ai.name_prefix
 }
 
