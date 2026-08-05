@@ -1,0 +1,17 @@
+# Seeded once by the init container into /opt/data/config.yaml (EFS).
+# Edit freely after deployment: the init container only writes this file
+# when it is absent, so your changes survive every redeploy.
+#
+# Ref: https://hermes-agent.nousresearch.com/docs/user-guide/docker/
+# _config_version pins this to the current schema: an unversioned file is
+# logged as "predates version 12, can no longer be auto-migrated" on every
+# boot and stays on whatever legacy behavior that implies.
+_config_version: 12
+model:
+  provider: custom
+  model: ${model}
+  base_url: ${base_url}
+  api_key: "${api_key}"
+  # An explicit value takes priority over Hermes' own output-token sizing,
+  # which otherwise exceeds the model's cap and fails every turn with HTTP 400.
+  max_tokens: ${max_tokens}

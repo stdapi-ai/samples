@@ -89,6 +89,23 @@ Deployment of n8n powered by stdapi.ai, with an owner account provisioned non-in
 
 ---
 
+### 🪽 [Hermes Agent](getting_started_hermes/)
+**Autonomous agent on Amazon Bedrock**, with its gateway and dashboard preconfigured against stdapi.ai.
+
+Deployment of [Hermes Agent](https://github.com/NousResearch/hermes-agent) (Nous Research), with `config.yaml` seeded on first boot and no manual editing before the first run.
+
+**Key Features:**
+
+- **Hermes gateway + dashboard** — OpenAI-compatible API and monitoring UI, dashboard behind HTTP Basic Auth
+- **Preconfigured `config.yaml`** — stdapi.ai URL and API key already filled in
+- **Persistent state** — Config, sessions, memories, and skills on EFS
+- **No local image build** — The image is pulled anonymously from Docker Hub
+- **ECS Exec** — Shell into the container or drive Hermes' interactive CLI directly
+
+**Best for:** Trying an autonomous agent loop against Bedrock models with zero API-key hunting
+
+---
+
 ## Quick Comparison
 
 ### Gateway deployments
@@ -109,6 +126,7 @@ Each of these deploys stdapi.ai in a single region, with the application in fron
 |---|---|---|---|
 | **Open WebUI** | ~20 minutes | Aurora PostgreSQL, Valkey, S3 | Complete chat platform, teams |
 | **n8n** | ~15-20 minutes | Aurora PostgreSQL | Workflow automation over the full route surface |
+| **Hermes Agent** | ~5 minutes | EFS | An autonomous agent loop on Bedrock |
 
 ---
 
