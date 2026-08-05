@@ -73,6 +73,22 @@ Full-featured deployment of Open WebUI powered by stdapi.ai. Includes web search
 
 ---
 
+### 🔗 [n8n](getting_started_n8n/)
+**Preconfigured workflow automation** with a credential and thirteen sample workflows already in place.
+
+Deployment of n8n powered by stdapi.ai, with an owner account provisioned non-interactively and one runnable sample workflow per stdapi.ai route family imported automatically on first start.
+
+**Key Features:**
+
+- **n8n** — Visual workflow automation, backed by Aurora PostgreSQL
+- **Pre-imported credential and workflows** — OpenAI- and Anthropic-compatible credentials plus 13 sample workflows, seeded on first boot
+- **Non-interactive owner account** — No signup screen to click through
+- **No local image build** — The official `n8nio/n8n` image is pulled directly from Docker Hub
+
+**Best for:** Trying stdapi.ai's full route surface through n8n's node library, no manual setup
+
+---
+
 ## Quick Comparison
 
 ### Gateway deployments
@@ -92,6 +108,7 @@ Each of these deploys stdapi.ai in a single region, with the application in fron
 | Example | Deployment Time | Backing services | Best For |
 |---|---|---|---|
 | **Open WebUI** | ~20 minutes | Aurora PostgreSQL, Valkey, S3 | Complete chat platform, teams |
+| **n8n** | ~15-20 minutes | Aurora PostgreSQL | Workflow automation over the full route surface |
 
 ---
 
