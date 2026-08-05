@@ -138,6 +138,22 @@ Deployment of Home Assistant with [wyoming-openai](https://github.com/roryeckel/
 
 ---
 
+### 📄 [Docling](getting_started_docling/)
+**Document conversion API for RAG**, with its optional VLM pipeline routed through stdapi.ai to a Bedrock vision model.
+
+Deployment of [Docling Serve](https://github.com/docling-project/docling-serve), CPU-only, with no web UI — a `POST` in, structured Markdown/JSON out, for the ingestion stage of a RAG pipeline.
+
+**Key Features:**
+
+- **Docling Serve** — Classical layout/OCR/table-structure extraction by default, no LLM call
+- **Optional VLM pipeline** — Page images routed through stdapi.ai to a vision-capable Bedrock model
+- **Zero backing services** — No database, cache, or file storage; models are baked into the image
+- **CPU-only** — No GPU required
+
+**Best for:** The document-ingestion stage of a RAG pipeline
+
+---
+
 ## Quick Comparison
 
 ### Gateway deployments
@@ -161,6 +177,7 @@ Each of these deploys stdapi.ai in a single region, with the application in fron
 | **Hermes Agent** | ~5 minutes | EFS | An autonomous agent loop on Bedrock |
 | **OpenClaw** | ~10-15 minutes | EFS | A personal assistant or coding agent |
 | **Home Assistant** | ~5-10 minutes | EFS | Assist voice through Amazon Transcribe and Polly |
+| **Docling** | ~5 minutes | None | The ingestion stage of a RAG pipeline |
 
 ---
 
