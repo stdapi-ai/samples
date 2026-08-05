@@ -84,7 +84,7 @@ module "stdapi_ai" {
 
   /*
   --------------------------------------------------------------------------
-  Sovereignty/Compliance configuration (GDPR, HIPAA, ...)
+  Sovereignty/data residency configuration (e.g. GDPR)
   --------------------------------------------------------------------------
   Amazon Bedrock global cross-region inference:
   true (default) prefers availability by letting Bedrock route requests

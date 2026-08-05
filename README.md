@@ -1,15 +1,15 @@
 # stdapi.ai Deployment Examples
 
-**Production-ready Terraform examples** for deploying [stdapi.ai](https://stdapi.ai) — an OpenAI, Anthropic & Cohere compatible API gateway for Amazon Bedrock. **14-day free trial included.**
+**Production-ready Terraform examples** for deploying [stdapi.ai](https://stdapi.ai) — an OpenAI, Anthropic & Cohere compatible API gateway that runs in your own AWS account, in front of Amazon Bedrock and the AWS AI services (Polly, Transcribe, Comprehend). Not just chat: images, video, audio, files, embeddings, moderation and reranking. **14-day free trial included.**
 
-[Start 14-Day Free Trial](https://stdapi.ai/operations_getting_started/) · [Documentation](https://stdapi.ai) · [GitHub Repository](https://github.com/stdapi-ai/stdapi.ai)
+[Start 14-Day Free Trial](https://aws.amazon.com/marketplace/pp/prodview-su2dajk5zawpo) · [Documentation](https://stdapi.ai/operations_getting_started/) · [GitHub Repository](https://github.com/stdapi-ai/stdapi.ai)
 
 ---
 
 ## Available Examples
 
 ### 🏢 [Production](getting_started_production/)
-**Single-region production deployment** with enterprise security and monitoring.
+**Single-region production deployment** with hardened security defaults and optional monitoring.
 
 Perfect for getting started with production workloads. Includes everything needed for secure, scalable deployment in a single AWS region.
 
@@ -25,30 +25,30 @@ Perfect for getting started with production workloads. Includes everything neede
 ---
 
 ### 🇪🇺 [Production GDPR](getting_started_production_gdpr/)
-**EU multi-region deployment** with GDPR compliance and data residency controls.
+**EU multi-region deployment** with EU data residency controls.
 
-Enterprise-grade deployment ensuring all data processing stays within EU regions. Supports multi-region failover across EU zones.
+Deployment that keeps model processing within the EU regions you enable. Eligible failures retry in another enabled EU region.
 
 **Key Features:**
 - Multi-region Bedrock access (4 EU regions: eu-west-3 Paris, eu-west-1 Ireland, eu-central-1 Frankfurt, eu-north-1 Stockholm)
 - Regional S3 buckets for multimodal operations
-- Data residency controls for compliance
+- Region allow-list with global cross-region inference disabled
 - All production features (HTTPS, WAF)
-- GDPR-ready infrastructure
+- Data residency controls for an EU-only processing footprint
 
-**Best for:** Enterprise deployments, GDPR compliance, EU data sovereignty requirements
+**Best for:** Enterprise deployments, EU data residency and data sovereignty requirements
 
 ---
 
 ### 🇺🇸 [Production US](getting_started_production_us/)
 **US multi-region deployment** for maximum availability and performance.
 
-Enterprise deployment leveraging multiple US regions for optimal performance and availability. Automatic cross-region failover for high availability.
+Enterprise deployment leveraging multiple US regions for performance and availability. Eligible failures retry in another enabled US region.
 
 **Key Features:**
 - Multi-region Bedrock access (3 US regions: us-east-1, us-west-2, us-east-2)
 - Regional S3 buckets for optimal performance
-- Cross-region failover and load balancing
+- Retry across enabled regions, each with its own Bedrock quota
 - All production features (HTTPS, WAF)
 - Maximum US availability
 
@@ -75,12 +75,14 @@ Full-featured deployment of Open WebUI powered by stdapi.ai. Includes web search
 
 ## Quick Comparison
 
-| Example | Deployment Time | Regions | Compliance | Best For |
+| Example | Deployment Time | Regions | Data residency | Best For |
 |---|---|---|---|---|
-| **Production** | ~10 minutes | Single region | Standard AWS | Most workloads, quick start |
-| **Production GDPR** | ~15 minutes | Multi-region (EU) | GDPR, EU data residency | EU enterprises, GDPR compliance |
-| **Production US** | ~15 minutes | Multi-region (US) | US data residency | US enterprises, high availability |
-| **Open WebUI** | ~20 minutes | Single region | Standard AWS | Complete chat platform, teams |
+| **Production** | ~10 minutes | Single region | The region you deploy in | Most workloads, quick start |
+| **Production GDPR** | ~15 minutes | Multi-region (EU) | EU regions only, global cross-region inference disabled | EU enterprises, EU data residency |
+| **Production US** | ~15 minutes | Multi-region (US) | US regions only | US enterprises, high availability |
+| **Open WebUI** | ~20 minutes | Single region | The region you deploy in | Complete chat platform, teams |
+
+> Region retry covers eligible throttling and availability failures. Streaming requests can only retry before the stream opens, and asynchronous jobs stay in the region that accepted them. Each region you enable adds its own Bedrock quota.
 
 ---
 
@@ -88,10 +90,16 @@ Full-featured deployment of Open WebUI powered by stdapi.ai. Includes web search
 
 ### Prerequisites
 
-1. **AWS Marketplace Subscription** — [Start 14-day free trial](https://stdapi.ai/operations_getting_started/) (includes hardened container images and commercial license)
+1. **AWS Marketplace Subscription** — [Start 14-day free trial](https://aws.amazon.com/marketplace/pp/prodview-su2dajk5zawpo) (includes hardened container images and commercial license)
+
+   Want to evaluate first, for free? The AGPL-3.0 **Community Edition** image `ghcr.io/stdapi-ai/stdapi.ai-community:latest` exposes the same API at no cost — see [Run locally with Docker](https://stdapi.ai/operations_getting_started_local/). The commercial difference is hardening, support and license rights, not endpoints.
 2. **Terraform or OpenTofu** — Install [Terraform](https://www.terraform.io/downloads) or [OpenTofu](https://opentofu.org/docs/intro/install/) >= 1.5
 3. **AWS Credentials** — Configure [AWS credentials](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) with appropriate permissions
 4. **Domain Name** (optional) — A domain managed in Route53, to serve HTTPS from your own name instead of the auto-generated ALB domain. Set `alb_domain_name` in `main.tf` to use it.
+
+### Cost
+
+The stdapi.ai license is **$0.10 per container-hour** on the AWS Marketplace (**$0.09** through a private offer), and **$0** for the Community Edition image. These examples keep the module defaults, which run **one task per availability zone** — so a three-AZ region runs three tasks, about **$216/month** in license, and six in us-east-1. ALB, NAT gateways, Fargate and KMS are billed separately by AWS. Amazon Bedrock usage is billed to you directly by AWS with **0% markup**.
 
 ### Deploy
 
@@ -114,14 +122,14 @@ Follow the README in that directory for step-by-step instructions.
 
 These deployment examples are licensed under the **MIT License** — see [LICENSE](LICENSE) for details.
 
-The stdapi.ai container image requires a separate [AWS Marketplace subscription](https://stdapi.ai/operations_getting_started/).
+The hardened stdapi.ai container image requires a separate [AWS Marketplace subscription](https://aws.amazon.com/marketplace/pp/prodview-su2dajk5zawpo). The AGPL-3.0 [Community Edition](https://stdapi.ai/operations_getting_started_local/) image is free.
 
 ---
 
 <div align="center">
 
-**Ready to deploy 80+ AI models on AWS?**
+**Ready to deploy 100+ AI models on AWS?**
 
-[Start 14-Day Free Trial](https://stdapi.ai/operations_getting_started/) · [Full Documentation](https://stdapi.ai)
+[Start 14-Day Free Trial](https://aws.amazon.com/marketplace/pp/prodview-su2dajk5zawpo) · [Full Documentation](https://stdapi.ai/operations_getting_started/)
 
 </div>

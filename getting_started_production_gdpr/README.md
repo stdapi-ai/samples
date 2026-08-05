@@ -1,6 +1,6 @@
 # Production Deployment - Multi-Region GDPR Compliant
 
-Enterprise-ready deployment with multi-region Bedrock support and GDPR compliance across EU regions.
+Enterprise-ready deployment with multi-region Bedrock support and EU data residency controls across EU regions.
 
 **See full documentation:** [Getting Started Guide](https://stdapi.ai/operations_getting_started/)
 
@@ -65,7 +65,7 @@ terraform output docs_url
 - Multi-region Bedrock support (4 EU regions: Paris, Ireland, Frankfurt, Stockholm)
 - Access to wider range of models across regions
 - Regional S3 buckets for multimodal operations
-- GDPR-compliant: EU data residency, no global cross-region inference
+- Data residency controls: EU regions only, global cross-region inference disabled
 - HTTPS with automatic SSL certificate (auto-generated domain)
 - WAF protection with rate limiting and anonymous IP blocking
 - Optional CloudWatch alarms and monitoring
