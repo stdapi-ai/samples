@@ -106,6 +106,22 @@ Deployment of [Hermes Agent](https://github.com/NousResearch/hermes-agent) (Nous
 
 ---
 
+### 🏠 [Home Assistant + wyoming-openai](getting_started_home_assistant/)
+**Voice assistant on AWS**, bridging Home Assistant's Assist pipeline to Amazon Transcribe and Polly through stdapi.ai.
+
+Deployment of Home Assistant with [wyoming-openai](https://github.com/roryeckel/wyoming_openai) as a same-task sidecar.
+
+**Key Features:**
+
+- **Home Assistant** — Config on a persistent EFS volume
+- **wyoming-openai** — Bridges Assist's Wyoming protocol to stdapi.ai's OpenAI-compatible audio routes
+- **Amazon Transcribe + Polly** — Speech-to-text and text-to-speech through stdapi.ai
+- **No local image build** — Both images are pulled directly from ghcr.io
+
+**Best for:** Assist voice through AWS AI services — as a cloud-hosted trial, or as the AWS half of a Home Assistant you run at home
+
+---
+
 ## Quick Comparison
 
 ### Gateway deployments
@@ -127,6 +143,7 @@ Each of these deploys stdapi.ai in a single region, with the application in fron
 | **Open WebUI** | ~20 minutes | Aurora PostgreSQL, Valkey, S3 | Complete chat platform, teams |
 | **n8n** | ~15-20 minutes | Aurora PostgreSQL | Workflow automation over the full route surface |
 | **Hermes Agent** | ~5 minutes | EFS | An autonomous agent loop on Bedrock |
+| **Home Assistant** | ~5-10 minutes | EFS | Assist voice through Amazon Transcribe and Polly |
 
 ---
 
