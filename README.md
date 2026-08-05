@@ -106,6 +106,22 @@ Deployment of [Hermes Agent](https://github.com/NousResearch/hermes-agent) (Nous
 
 ---
 
+### 🦾 [OpenClaw](getting_started_openclaw/)
+**Autonomous agent gateway with a browser Control UI**, preconfigured to drive Amazon Bedrock through stdapi.ai.
+
+Deployment of [OpenClaw](https://github.com/openclaw/openclaw), a personal-assistant and coding-agent gateway.
+
+**Key Features:**
+
+- **OpenClaw gateway + Control UI** — Reachable through the ALB, token-authenticated
+- **Preconfigured provider** — stdapi.ai registered as a custom OpenAI-compatible provider
+- **Persistence** — Config, auth material, and workspace on EFS
+- **No local image build** — The public `ghcr.io/openclaw/openclaw` image is pulled anonymously
+
+**Best for:** Evaluating OpenClaw as a personal assistant or coding agent against Bedrock models
+
+---
+
 ### 🏠 [Home Assistant + wyoming-openai](getting_started_home_assistant/)
 **Voice assistant on AWS**, bridging Home Assistant's Assist pipeline to Amazon Transcribe and Polly through stdapi.ai.
 
@@ -143,6 +159,7 @@ Each of these deploys stdapi.ai in a single region, with the application in fron
 | **Open WebUI** | ~20 minutes | Aurora PostgreSQL, Valkey, S3 | Complete chat platform, teams |
 | **n8n** | ~15-20 minutes | Aurora PostgreSQL | Workflow automation over the full route surface |
 | **Hermes Agent** | ~5 minutes | EFS | An autonomous agent loop on Bedrock |
+| **OpenClaw** | ~10-15 minutes | EFS | A personal assistant or coding agent |
 | **Home Assistant** | ~5-10 minutes | EFS | Assist voice through Amazon Transcribe and Polly |
 
 ---

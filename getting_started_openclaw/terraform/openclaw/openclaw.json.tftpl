@@ -1,0 +1,40 @@
+{
+  "gateway": {
+    "mode": "local",
+    "bind": "lan",
+    "controlUi": {
+      "allowedOrigins": ["${allowed_origin}"]
+    },
+    "auth": {
+      "mode": "token",
+      "token": "$${OPENCLAW_GATEWAY_TOKEN}"
+    }
+  },
+  "agents": {
+    "defaults": {
+      "sandbox": {
+        "mode": "off"
+      },
+      "model": {
+        "primary": "${provider_id}/${model_id}"
+      }
+    }
+  },
+  "models": {
+    "providers": {
+      "${provider_id}": {
+        "baseUrl": "${base_url}",
+        "apiKey": "$${STDAPI_API_KEY}",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "${model_id}",
+            "name": "Claude Fable 5 (Amazon Bedrock via stdapi.ai)",
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          }
+        ]
+      }
+    }
+  }
+}
