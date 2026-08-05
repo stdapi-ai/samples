@@ -75,14 +75,23 @@ Full-featured deployment of Open WebUI powered by stdapi.ai. Includes web search
 
 ## Quick Comparison
 
+### Gateway deployments
+
 | Example | Deployment Time | Regions | Data residency | Best For |
 |---|---|---|---|---|
 | **Production** | ~10 minutes | Single region | The region you deploy in | Most workloads, quick start |
 | **Production GDPR** | ~15 minutes | Multi-region (EU) | EU regions only, global cross-region inference disabled | EU enterprises, EU data residency |
 | **Production US** | ~15 minutes | Multi-region (US) | US regions only | US enterprises, high availability |
-| **Open WebUI** | ~20 minutes | Single region | The region you deploy in | Complete chat platform, teams |
 
 > Region retry covers eligible throttling and availability failures. Streaming requests can only retry before the stream opens, and asynchronous jobs stay in the region that accepted them. Each region you enable adds its own Bedrock quota.
+
+### Application examples
+
+Each of these deploys stdapi.ai in a single region, with the application in front of it.
+
+| Example | Deployment Time | Backing services | Best For |
+|---|---|---|---|
+| **Open WebUI** | ~20 minutes | Aurora PostgreSQL, Valkey, S3 | Complete chat platform, teams |
 
 ---
 

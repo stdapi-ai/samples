@@ -22,32 +22,26 @@ This sample keeps most Open WebUI settings at their defaults, and explicitly con
 ## Prerequisites
 
 1. **AWS Marketplace Subscription**: [Subscribe to stdapi.ai](https://aws.amazon.com/marketplace/pp/prodview-su2dajk5zawpo) - 14-day free trial
-2. **Terraform or OpenTofu**: Install [Terraform](https://www.terraform.io/downloads) or [OpenTofu](https://opentofu.org/docs/intro/install/) >= 1.5
-3. **Docker or Podman**: Install [Docker Desktop](https://docs.docker.com/get-docker/) or Docker Engine. On Fedora, Podman is supported via the Docker provider socket. **Required to build & copy container images to ECR**
-4. **AWS CLI**: Install [AWS CLI v2](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) - **Required for PostgreSQL database initialization via RDS Data API**
-5. **AWS Credentials**: Configure your credentials
+2. **OpenTofu**: Install [OpenTofu](https://opentofu.org/docs/intro/install/) >= 1.5
+3. **AWS CLI**: Install [AWS CLI v2](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) - **Required for PostgreSQL database initialization via RDS Data API**
+4. **AWS Credentials**: Configure your credentials
    ```bash
    aws sso login --profile your-profile
    ```
 
 > ⚠️ **Requires AWS administrator permissions.** This stack provisions IAM roles and
-> policies, KMS keys, ECS/Fargate, ALB, Aurora PostgreSQL, ElastiCache Valkey, ECR,
-> S3, and networking. A restricted developer profile will fail during `terraform apply`.
+> policies, KMS keys, ECS/Fargate, ALB, Aurora PostgreSQL, ElastiCache Valkey,
+> S3, and networking. A restricted developer profile will fail during `tofu apply`.
 >
 > **Strongly recommended:** deploy into a **sandbox / non-production AWS account first**
 > to evaluate the stack, then replicate into your target account with scoped-down
 > principals once you've validated it.
 
-Before running `terraform apply`, confirm your active AWS identity and region
-(the AWS provider reads them from your environment, not from a Terraform variable):
+Before running `tofu apply`, confirm your active AWS identity and region
+(the AWS provider reads them from your environment, not from an OpenTofu variable):
 ```bash
 aws sts get-caller-identity
 aws configure get region
-```
-
-If you use Podman (common on Fedora), set the Docker provider socket in your `terraform.tfvars`:
-```hcl
-docker_host = "unix:///var/run/user/1000/podman/podman.sock"
 ```
 
 ## Get the Code
@@ -71,15 +65,15 @@ cd samples-main/getting_started_openwebui
 
 ```bash
 cd terraform
-terraform init
-terraform apply
+tofu init
+tofu apply
 ```
 
 After deployment (about 20 minutes for all services to be ready):
 
 ```bash
 # Get the Open WebUI URL
-terraform output openwebui_url
+tofu output openwebui_url
 ```
 
 Open the URL in your browser and create your first admin account.
@@ -107,7 +101,7 @@ flowchart LR
 
 Access is restricted to your current IP address:
 - Your public IP is automatically detected during deployment
-- If your IP changes, run `terraform apply` to update access
+- If your IP changes, run `tofu apply` to update access
 
 ## Customization
 
@@ -171,7 +165,7 @@ This sample favors low cost and easy cleanup over durability. Before promoting i
 
 - **Aurora PostgreSQL**: deletion protection is disabled, backups keep the default 1-day retention, and the final snapshot is skipped on destroy (`skip_final_snapshot`). Enable deletion protection, extend backup retention, and take final snapshots.
 - **ElastiCache Valkey**: single node with no automatic backups. Add replicas or Multi-AZ and enable snapshot retention.
-- **ALB**: access logging is not enabled and no WAF is attached. Enable ALB access logs to a dedicated S3 bucket and consider AWS WAF (see the production samples for a WAF-enabled configuration).
+- **ALB**: access logging is not enabled and no WAF is attached. Enable ALB access logs to a dedicated S3 bucket and consider AWS WAF.
 
 ### Microservices interconnections
 
@@ -185,14 +179,23 @@ To delete all resources and stop incurring charges:
 
 ```bash
 cd terraform
-terraform destroy
+tofu destroy
 ```
 
 **Note**: This will permanently delete all resources including S3 buckets, databases, and data.
 
+## Expected Log Noise
+
+Two harmless messages appear in the SearXNG container logs on every start, both verified on a real deployment:
+
+- `chown: /etc/searxng/...: Read-only file system` (four lines). Its configuration is mounted read-only from S3 Files, and the upstream entrypoint chowns that directory unconditionally. SearXNG serves normally afterwards.
+- `ERROR:searx.botdetection: X-Forwarded-For nor X-Real-IP header is set!`, emitted for the container health check, which is a direct local request rather than a proxied one.
+
+Individual search engines may also log `HTTP error 403` when an upstream provider blocks AWS IP ranges. That affects only that engine.
+
 ## Version Compatibility
 
-- Terraform/OpenTofu >= 1.5
+- OpenTofu >= 1.5
 - stdapi.ai Terraform module ~> 1.0
 - AWS Provider >= 6.27.0
 - Open WebUI `v0.11.0` (slim image variant)
@@ -209,7 +212,7 @@ terraform destroy
 
 ## Troubleshooting
 
-If you encounter errors, try re-running `terraform apply`.
+If you encounter errors, try re-running `tofu apply`.
 
 ### Error on ElastiCache creation
 
@@ -224,16 +227,16 @@ The ElastiCache Valkey cache may fail on creation. This issue occurs if there is
 │ 
 ╵
 ```
-The solution is to remove the failed Valkey cache from the ElastiCache console and re-run `terraform apply` to retry.
-When deleting the cache, disable backups, then wait until the full deletion is complete before running `terraform apply`.
+The solution is to remove the failed Valkey cache from the ElastiCache console and re-run `tofu apply` to retry.
+When deleting the cache, disable backups, then wait until the full deletion is complete before running `tofu apply`.
 
 If the issue persists, you can try changing the `node_type` in `valkey.tf` (for example, from "cache.t4g.micro" to "cache.t3.micro") before retrying.
 
 ### Other common issues
 
-- **`terraform apply` fails with AccessDenied** — your AWS profile lacks administrator permissions. See Prerequisites above.
-- **Docker/Podman build or push errors** — verify the Docker provider socket (`docker_host` in `terraform.tfvars`) and that `aws ecr get-login-password` works with your profile.
+- **`tofu apply` fails with AccessDenied** — your AWS profile lacks administrator permissions. See Prerequisites above.
 - **Open WebUI loads but model list is empty** — the stdapi.ai service behind it may still be starting; wait 2–3 minutes and refresh.
 - **`503 Service Unavailable`** — ECS tasks are still starting; health checks take a few minutes.
+- **`aws_s3files_mount_target` fails to create** — S3 Files, which serves the SearXNG configuration, is not offered in every availability zone, and no API lists the ones that are. Set `mount_points_s3_files_subnets_ids` on `module "searxng"` in `terraform/searxng.tf` to the subset of `module.vpc.subnets_ids` whose zones support it; the service keeps running across all of them.
 
 **Full troubleshooting guide:** https://stdapi.ai/operations_troubleshooting/

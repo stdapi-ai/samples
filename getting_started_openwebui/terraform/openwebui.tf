@@ -8,52 +8,6 @@ Deploys Open WebUI using ECS Fargate with stdapi.ai as the OpenAI backend
 locals {
   openwebui_port         = 8080
   openwebui_source_image = "ghcr.io/open-webui/open-webui:${local.openwebui_image_tag}"
-  openwebui_ecr_image    = "${aws_ecr_repository.openwebui.repository_url}:${local.openwebui_image_tag}"
-}
-
-/*
-----------------------------------------------------------------------------
-Docker image & ECR Repository
-----------------------------------------------------------------------------
-*/
-
-resource "aws_ecr_repository" "openwebui" {
-  name         = "${local.name_prefix}-openwebui"
-  force_delete = true
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-}
-
-resource "aws_ecr_lifecycle_policy" "openwebui" {
-  repository = aws_ecr_repository.openwebui.name
-  policy = jsonencode({
-    rules = [{
-      rulePriority = 1
-      description  = "Keep last image"
-      selection = {
-        tagStatus   = "any"
-        countType   = "imageCountMoreThan"
-        countNumber = 1
-      }
-      action = {
-        type = "expire"
-      }
-    }]
-  })
-}
-
-resource "docker_image" "openwebui" {
-  name = local.openwebui_source_image
-}
-
-resource "docker_tag" "openwebui" {
-  source_image = docker_image.openwebui.image_id
-  target_image = local.openwebui_ecr_image
-}
-
-resource "docker_registry_image" "openwebui" {
-  name = docker_tag.openwebui.target_image
 }
 
 /*
@@ -64,7 +18,7 @@ ECS Service
 
 module "openwebui" {
   source  = "JGoutin/ecs-fargate/aws"
-  version = "~> 1.0"
+  version = "~> 1.4"
 
   name_prefix        = "${local.name_prefix}-openwebui"
   subnets_ids        = module.vpc.subnets_ids
@@ -75,7 +29,7 @@ module "openwebui" {
 
   container_definitions = {
     main = {
-      image = local.openwebui_ecr_image
+      image = local.openwebui_source_image
       port_mappings = {
         http = {
           container_port    = local.openwebui_port
@@ -255,10 +209,7 @@ module "openwebui" {
     }
   }
 
-  depends_on = [
-    docker_registry_image.openwebui,
-    null_resource.grant_vector_schema_privileges,
-  ]
+  depends_on = [null_resource.grant_vector_schema_privileges]
 }
 
 resource "random_password" "openwebui_secret_key" {

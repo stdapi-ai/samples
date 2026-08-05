@@ -9,52 +9,6 @@ locals {
   playwright_port         = 3000
   playwright_url          = "ws://${module.playwright.service_discovery_service_name}.${local.internal_namespace}:${local.playwright_port}"
   playwright_source_image = "mcr.microsoft.com/playwright:v${local.playwright_version}-noble"
-  playwright_ecr_image    = "${aws_ecr_repository.playwright.repository_url}:${local.playwright_version}"
-}
-
-/*
-----------------------------------------------------------------------------
-Docker image & ECR Repository
-----------------------------------------------------------------------------
-*/
-
-resource "aws_ecr_repository" "playwright" {
-  name         = "${local.name_prefix}-playwright"
-  force_delete = true
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-}
-
-resource "aws_ecr_lifecycle_policy" "playwright" {
-  repository = aws_ecr_repository.playwright.name
-  policy = jsonencode({
-    rules = [{
-      rulePriority = 1
-      description  = "Keep last image"
-      selection = {
-        tagStatus   = "any"
-        countType   = "imageCountMoreThan"
-        countNumber = 1
-      }
-      action = {
-        type = "expire"
-      }
-    }]
-  })
-}
-
-resource "docker_image" "playwright" {
-  name = local.playwright_source_image
-}
-
-resource "docker_tag" "playwright" {
-  source_image = docker_image.playwright.image_id
-  target_image = local.playwright_ecr_image
-}
-
-resource "docker_registry_image" "playwright" {
-  name = docker_tag.playwright.target_image
 }
 
 /*
@@ -65,7 +19,7 @@ ECS Service
 
 module "playwright" {
   source  = "JGoutin/ecs-fargate/aws"
-  version = "~> 1.0"
+  version = "~> 1.4"
 
   name_prefix        = "${local.name_prefix}-playwright"
   subnets_ids        = module.vpc.subnets_ids
@@ -76,7 +30,7 @@ module "playwright" {
 
   container_definitions = {
     main = {
-      image   = local.playwright_ecr_image
+      image   = local.playwright_source_image
       command = ["npx", "-y", "playwright@${local.playwright_version}", "run-server", "--port", "3000", "--host", "0.0.0.0"]
       port_mappings = {
         http = {
@@ -92,6 +46,4 @@ module "playwright" {
 
   service_discovery_dns_namespace_id = local.internal_namespace_id
   service_discovery_dns_name         = "playwright"
-
-  depends_on = [docker_registry_image.playwright]
 }

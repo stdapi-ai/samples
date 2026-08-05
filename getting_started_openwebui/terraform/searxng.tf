@@ -6,56 +6,9 @@ Deploys SearXNG as a web search backend for Open WebUI
 */
 
 locals {
-  searxng_port      = 8080
-  searxng_url       = "http://${module.searxng.service_discovery_service_name}.${local.internal_namespace}:${local.searxng_port}/search?q=<query>"
-  searxng_ecr_image = "${aws_ecr_repository.searxng.repository_url}:${local.searxng_image_tag}"
-}
-
-/*
-----------------------------------------------------------------------------
-Docker image & ECR Repository
-----------------------------------------------------------------------------
-*/
-
-resource "aws_ecr_repository" "searxng" {
-  name         = "${local.name_prefix}-searxng"
-  force_delete = true
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-}
-
-resource "aws_ecr_lifecycle_policy" "searxng" {
-  repository = aws_ecr_repository.searxng.name
-  policy = jsonencode({
-    rules = [{
-      rulePriority = 1
-      description  = "Keep last image"
-      selection = {
-        tagStatus   = "any"
-        countType   = "imageCountMoreThan"
-        countNumber = 1
-      }
-      action = {
-        type = "expire"
-      }
-    }]
-  })
-}
-
-resource "docker_image" "searxng" {
-  name = local.searxng_ecr_image
-  build {
-    context    = "${path.module}/searxng"
-    dockerfile = "Dockerfile"
-    build_args = {
-      SEARXNG_VERSION = local.searxng_image_tag
-    }
-  }
-}
-
-resource "docker_registry_image" "searxng" {
-  name = docker_image.searxng.name
+  searxng_port         = 8080
+  searxng_url          = "http://${module.searxng.service_discovery_service_name}.${local.internal_namespace}:${local.searxng_port}/search?q=<query>"
+  searxng_source_image = "docker.io/searxng/searxng:${local.searxng_image_tag}"
 }
 
 /*
@@ -66,7 +19,7 @@ ECS Service
 
 module "searxng" {
   source  = "JGoutin/ecs-fargate/aws"
-  version = "~> 1.0"
+  version = "~> 1.4"
 
   name_prefix        = "${local.name_prefix}-searxng"
   subnets_ids        = module.vpc.subnets_ids
@@ -74,7 +27,7 @@ module "searxng" {
 
   container_definitions = {
     main = {
-      image = local.searxng_ecr_image
+      image = local.searxng_source_image
       port_mappings = {
         http = {
           container_port = local.searxng_port
@@ -92,6 +45,29 @@ module "searxng" {
         SEARXNG_VALKEY_URL = "valkeys://:${random_password.valkey_auth_token.result}@${local.valkey_address}/2"
         SEARXNG_SECRET     = random_password.searxng_secret_key.result
       }
+      mount_points = {
+        # Ships settings.yml/limiter.toml with no image build. Read-only is safe: the
+        # upstream entrypoint only (re)writes /etc/searxng/settings.yml when the file
+        # is absent, which never happens here.
+        # https://github.com/searxng/searxng/blob/master/container/entrypoint.sh
+        #
+        # That entrypoint also chowns this directory on start. Objects surfaced through
+        # S3 Files do not carry the POSIX ownership the access point enforces on access,
+        # so the chown is attempted and logs "Read-only file system" four times per
+        # start. It is not fatal, and SearXNG serves normally afterwards.
+        config = {
+          container_path = "/etc/searxng"
+          read_only      = true
+          s3_files       = true
+          # uid/gid 977 is the "searxng" user baked into the upstream image:
+          # https://github.com/searxng/searxng/blob/master/container/dist.dockerfile
+          s3_files_posix_user = { uid = 977, gid = 977 }
+          s3_files_files = {
+            "settings.yml" = file("${path.module}/searxng/settings.yml")
+            "limiter.toml" = file("${path.module}/searxng/limiter.toml")
+          }
+        }
+      }
     }
   }
 
@@ -104,8 +80,6 @@ module "searxng" {
       referenced_security_group_id = aws_security_group.valkey.id
     }
   }
-
-  depends_on = [docker_registry_image.searxng]
 }
 
 resource "random_password" "searxng_secret_key" {
