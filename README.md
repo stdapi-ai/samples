@@ -73,6 +73,23 @@ Full-featured deployment of Open WebUI powered by stdapi.ai. Includes web search
 
 ---
 
+### 🧠 [LobeHub](getting_started_lobehub/)
+**Private AI chat platform** with vision, image generation, and knowledge-base embeddings through one OpenAI-compatible connection.
+
+Deployment of LobeHub powered by stdapi.ai, in server DB mode with a self-hosted ParadeDB Postgres.
+
+**Key Features:**
+
+- **LobeHub** — Modern chat UI with plugin/agent marketplace and knowledge base
+- **Single connection** — One "OpenAI" provider covers chat, vision, image generation, and embeddings
+- **Self-hosted ParadeDB** — Postgres 17 with `pg_search` + `pgvector` on EFS
+- **Object storage** — Self-hosted RustFS (S3-compatible) for uploads
+- **Caching** — Valkey (Redis-compatible) for sessions
+
+**Best for:** Evaluating LobeHub against Bedrock models
+
+---
+
 ### 🔗 [n8n](getting_started_n8n/)
 **Preconfigured workflow automation** with a credential and thirteen sample workflows already in place.
 
@@ -173,6 +190,7 @@ Each of these deploys stdapi.ai in a single region, with the application in fron
 | Example | Deployment Time | Backing services | Best For |
 |---|---|---|---|
 | **Open WebUI** | ~20 minutes | Aurora PostgreSQL, Valkey, S3 | Complete chat platform, teams |
+| **LobeHub** | ~10 minutes | Postgres on EFS, Valkey, S3 | Evaluating LobeHub against Bedrock models |
 | **n8n** | ~15-20 minutes | Aurora PostgreSQL | Workflow automation over the full route surface |
 | **Hermes Agent** | ~5 minutes | EFS | An autonomous agent loop on Bedrock |
 | **OpenClaw** | ~10-15 minutes | EFS | A personal assistant or coding agent |
