@@ -171,6 +171,22 @@ Deployment of [Docling Serve](https://github.com/docling-project/docling-serve),
 
 ---
 
+### 📚 [RAGFlow](getting_started_ragflow/)
+**Complete RAG platform**, with chat, embedding and reranking models bound to stdapi.ai before you ever log in.
+
+Deployment of [RAGFlow](https://github.com/infiniflow/ragflow) on ECS Fargate, with every backing service replaced by a managed AWS equivalent: Amazon OpenSearch Service for the document/vector store, Aurora PostgreSQL for metadata, ElastiCache Valkey for the task queue, and Amazon S3 for files.
+
+**Key Features:**
+
+- **Preconfigured providers** — Chat, embedding and rerank models bound to the admin tenant during deployment, no admin UI to click through
+- **Amazon OpenSearch Service** — Hybrid BM25 + vector retrieval on a managed VPC domain, no self-hosted Elasticsearch
+- **Amazon Bedrock reranking** — Retrieved chunks reranked through stdapi.ai's Cohere-compatible endpoint
+- **Task role for S3** — No static access keys for object storage
+
+**Best for:** Document Q&A over your own corpus, with retrieval quality you can tune
+
+---
+
 ## Quick Comparison
 
 ### Gateway deployments
@@ -196,6 +212,7 @@ Each of these deploys stdapi.ai in a single region, with the application in fron
 | **OpenClaw** | ~10-15 minutes | EFS | A personal assistant or coding agent |
 | **Home Assistant** | ~5-10 minutes | EFS | Assist voice through Amazon Transcribe and Polly |
 | **Docling** | ~5 minutes | None | The ingestion stage of a RAG pipeline |
+| **RAGFlow** | ~30 minutes | Amazon OpenSearch, Aurora PostgreSQL, Valkey, S3 | Document Q&A over your own corpus |
 
 ---
 

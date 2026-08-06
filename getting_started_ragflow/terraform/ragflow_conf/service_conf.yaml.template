@@ -1,0 +1,47 @@
+# RAGFlow service configuration for this deployment.
+#
+# The image entry point renders this file into conf/service_conf.yaml by
+# expanding every shell variable below, then starts RAGFlow. Values that are
+# not secret arrive as plain environment variables; passwords arrive as ECS
+# secrets, which the agent resolves from SSM parameters before the task runs.
+#
+# Only the sections this deployment actually uses are present. The document
+# engine (os), the object store (s3) and the metadata database (postgres) are
+# selected by DOC_ENGINE, STORAGE_IMPL and DB_TYPE in the task definition.
+ragflow:
+  host: ${RAGFLOW_HOST:-0.0.0.0}
+  http_port: 9380
+admin:
+  host: ${RAGFLOW_HOST:-0.0.0.0}
+  http_port: 9381
+postgres:
+  name: '${RAGFLOW_POSTGRES_DBNAME}'
+  user: '${RAGFLOW_POSTGRES_USER}'
+  password: '${RAGFLOW_POSTGRES_PASSWORD}'
+  host: '${RAGFLOW_POSTGRES_HOST}'
+  port: ${RAGFLOW_POSTGRES_PORT}
+  max_connections: 100
+  stale_timeout: 30
+  # Extra keys reach the PostgreSQL driver untouched, so the connection to
+  # Aurora is encrypted. The certificate chain is not verified, which would
+  # mean shipping and rotating the Amazon RDS CA bundle for a hop that never
+  # leaves the VPC; use 'verify-full' plus 'sslrootcert' to verify it.
+  sslmode: 'require'
+os:
+  hosts: 'https://${RAGFLOW_OPENSEARCH_HOST}:443'
+  username: '${RAGFLOW_OPENSEARCH_USER}'
+  password: '${RAGFLOW_OPENSEARCH_PASSWORD}'
+  hybrid_search_pipeline: 'ragflow_hybrid_pipeline'
+  hybrid_search_weights: [0.5, 0.5]
+redis:
+  db: 1
+  # The socat sidecar listens here and forwards to ElastiCache over TLS.
+  host: '127.0.0.1:6379'
+  password: '${RAGFLOW_REDIS_PASSWORD}'
+s3:
+  # No access_key/secret_key and no endpoint_url: boto3 then falls back to its
+  # default credential chain, which on Fargate is the ECS task role.
+  # The key is region_name, not the region the shipped template documents.
+  region_name: '${AWS_REGION}'
+  bucket: '${RAGFLOW_S3_BUCKET}'
+  prefix_path: '${RAGFLOW_S3_PREFIX}'
